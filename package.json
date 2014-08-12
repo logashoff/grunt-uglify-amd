@@ -1,0 +1,44 @@
+{
+  "name": "grunt-uglify-amd",
+  "description": "Use '@inlude:' in file comments to sepcify module dependencies instead of manually creating an array of file dependencies.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/logashoff/grunt-uglify-amd",
+  "author": {
+    "name": "Alex Logashov",
+    "email": "admin@shiftarray.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/logashoff/grunt-uglify-amd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/logashoff/grunt-uglify-amd/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/logashoff/grunt-uglify-amd/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+    
+  "dependencies": {
+    "lodash": "~2.4.1"
+  },
+
+  "devDependencies": {
+    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-nodeunit": "^0.3.3",
+    "grunt-contrib-uglify": "~0.5.1",
+    "grunt": "~0.4.5"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.5"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
