@@ -49,7 +49,7 @@ module.exports = function(grunt)
 
     if(amds && amds.length)
     {
-      for(var i = 0, l = amds.length; i < l; i++)
+      for(var i = amds.length; i-- > 0;)
       {
         buildPaths(amds[i], arr);
       }
@@ -74,11 +74,14 @@ module.exports = function(grunt)
 
     buildPaths(firstFile.src[0], filePaths);
 
+    filePaths = _.uniq(filePaths);
+
     var files = {};
-        files[firstFile.dest] = _.uniq(filePaths);
+        files[firstFile.dest] = filePaths;
 
     grunt.config.set("uglify.js.options", options);
     grunt.config.set("uglify.js.files", files);
+    
     grunt.task.run("uglify");
 
   });
