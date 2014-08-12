@@ -23,8 +23,6 @@ module.exports = function(grunt) {
       }
     },
 
-    uglify: {js:{}},
-
     uglifyAMD: {
       js: {
         options: {
@@ -45,7 +43,6 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');

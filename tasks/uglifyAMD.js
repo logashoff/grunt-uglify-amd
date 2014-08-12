@@ -66,7 +66,7 @@ module.exports = function(grunt)
       return;
     }
 
-    grunt.task.exists("uglify");
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     var options   = this.options(),
         firstFile = this.files[0],
