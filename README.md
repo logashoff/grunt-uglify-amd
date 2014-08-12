@@ -1,6 +1,6 @@
 # grunt-uglify-amd
 
-> Use "@inlude:" in file comments to sepcify module dependencies instead of manually creating an array of file dependencies.
+> Use "@include:" in file comments to specify module dependencies instead of manually creating an array of file dependencies.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
