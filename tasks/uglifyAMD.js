@@ -71,8 +71,6 @@ module.exports = function(grunt)
     var dest = this.files[0].dest,
         paths = [];
 
-        console.log(dest)
-
     _.each(this.files, function(file)
     {
       _.each(file.src, function(filepath)

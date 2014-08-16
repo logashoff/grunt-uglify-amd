@@ -1,7 +1,7 @@
 {
   "name": "grunt-uglify-amd",
   "description": "Use '@include:' in file comments to specify module dependencies instead of manually creating an array of file dependencies.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/logashoff/grunt-uglify-amd",
   "author": {
     "name": "Alex Logashov",
