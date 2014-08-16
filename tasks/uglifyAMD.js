@@ -67,21 +67,33 @@ module.exports = function(grunt)
     }
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    
+    var dest = this.files[0].dest,
+        paths = [];
 
-    var options   = this.options(),
-        firstFile = this.files[0],
-        filePaths = [];
+        console.log(dest)
 
-    buildPaths(firstFile.src[0], filePaths);
+    _.each(this.files, function(file)
+    {
+      _.each(file.src, function(filepath)
+      {
+        var src = [];
+        
+        buildPaths(filepath, src);
+        
+        paths.push(src);
+      });
+    });
 
-    filePaths = _.uniq(filePaths);
+    paths = _.flatten(paths);
+    paths = _.uniq(paths, false);
 
     var files = {};
-        files[firstFile.dest] = filePaths;
+        files[dest] = paths;
 
-    grunt.config.set("uglify.js.options", options);
+    grunt.config.set("uglify.js.options", this.options());
     grunt.config.set("uglify.js.files", files);
-    
+
     grunt.task.run("uglify");
 
   });
