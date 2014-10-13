@@ -9,35 +9,18 @@
 'use strict';
 
 var _ = require("lodash");
+var glob = require('glob');
 
-module.exports = function(grunt) 
-{
+module.exports = function(grunt) {
+
+  var nsDefineRegExp = /[^.]\s*ns.define\s*\(\s*["']([^'"\s]+)["']\s*(\s*,\s*\S+)?\)/g;
+  var nsRequireRegExp = /[^.]\s*ns.require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
+
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
-  
-  function filePathsFromString(value)
-  {
-    var strArr = value.match(/\s+@include:\s+(\S+)/gmi);
 
-    if(!strArr || !strArr.length) return [];
-
-    for(var i = strArr.length, s, r = []; i-- > 0;)
-    {
-        s = strArr[i];
-        
-        if(s && !~r.indexOf(s))
-        {
-          r.push(s.match(/(\S+)$/)[0]);
-        }
-    }
-
-    return r;
-  }
-
-  function buildPaths(file, arr)
-  {
-    if(!grunt.file.exists(file))
-    {
+  function buildPaths(file, arr, namespaces) {
+    if (!grunt.file.exists(file)) {
       grunt.log.warn('File "' + file + '" not found');
       return;
     }
@@ -45,40 +28,59 @@ module.exports = function(grunt)
     arr.unshift(file);
 
     var body = grunt.file.read(file);
-    var amds = filePathsFromString(body);
 
-    if(amds && amds.length)
-    {
-      for(var i = amds.length; i-- > 0;)
-      {
-        buildPaths(amds[i], arr);
+    var amds = [];
+    body.replace(nsRequireRegExp, function(match, ns) {
+      amds.push(namespaces[ns]);
+    });
+
+    if (amds && amds.length) {
+      for (var i = amds.length; i-- > 0;) {
+        buildPaths(amds[i], arr, namespaces);
       }
     }
 
     return arr;
   }
 
-  grunt.registerMultiTask('uglifyAMD', 'Create array of module dependencies from @inlude comments', function() 
-  {
-    if(!this.files || !this.files.length)
-    {
-      grunt.log.error("File target not specified")
+  function parseNamespace(content) {
+    var namespace;
+    content.replace(nsDefineRegExp, function(match, ns) {
+      namespace = ns;
+    });
+
+    return namespace;
+  }
+
+  grunt.registerMultiTask('uglifyAMD', 'Create array of module dependencies from @inlude comments', function() {
+    if (!this.files || !this.files.length) {
+      grunt.log.error('File target not specified')
       return;
     }
 
+    var deps = this.files;
+    var options = this.options;
+    var namespaces = {};
+
+    // TODO: Need a way to define file paths
+    glob('**/scripts/**/*.js', {sync:true}, function(error, files) {
+      for (var i = 0, f; f = files[i]; i++) {
+        var namespace = parseNamespace(grunt.file.read(f));
+        if (namespace) {
+          namespaces[namespace] = f;
+        }
+      }
+    });
+
     grunt.loadNpmTasks('grunt-contrib-uglify');
     
-    var dest = this.files[0].dest,
+    var dest = deps[0].dest,
         paths = [];
 
-    _.each(this.files, function(file)
-    {
-      _.each(file.src, function(filepath)
-      {
+    _.each(deps, function(file) {
+      _.each(file.src, function(filepath) {
         var src = [];
-        
-        buildPaths(filepath, src);
-        
+        buildPaths(filepath, src, namespaces);
         paths.push(src);
       });
     });
@@ -86,14 +88,12 @@ module.exports = function(grunt)
     paths = _.flatten(paths);
     paths = _.uniq(paths, false);
 
-    var files = {};
-        files[dest] = paths;
+    var out = {};
+    out[dest] = paths;
 
-    grunt.config.set("uglify.js.options", this.options());
-    grunt.config.set("uglify.js.files", files);
+    grunt.config.set('uglify.js.options', options());
+    grunt.config.set('uglify.js.files', out);
 
-    grunt.task.run("uglify");
-
+    grunt.task.run('uglify');
   });
-
 };

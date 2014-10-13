@@ -38,8 +38,13 @@ grunt.initConfig({
 ### Specify Dependencies
 
 ```js
-// @include: scripts/src/shift/utils.js 
-// @include: scripts/src/shift/tweet.js
+// Define module
+ns.define("foo.bar.FooBar");
+// or
+ns.define("foo.bar.FooBar", FooBar);
+
+// Require module
+ns.require("foo.bar.FooBar");
 ```
 
 ## Contributing
