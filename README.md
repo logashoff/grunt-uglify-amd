@@ -1,6 +1,6 @@
 # grunt-uglify-amd
 
-> Use "@include:" in file comments to specify module dependencies instead of manually creating an array of file dependencies.
+> Use ns.define and ns.require to define and include a module
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
