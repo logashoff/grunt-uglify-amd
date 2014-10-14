@@ -1,7 +1,7 @@
 {
   "name": "grunt-uglify-amd",
   "description": "Lightweight AMD for UglifyJS",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/logashoff/grunt-uglify-amd",
   "author": {
     "name": "Alex Logashov",

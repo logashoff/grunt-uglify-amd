@@ -31,6 +31,10 @@ module.exports = function(grunt) {
 
     var amds = [];
     body.replace(nsRequireRegExp, function(match, ns) {
+      if(!namespaces[ns]) {
+        throw new Error('Required namespace "' + ns + '" not found.');
+      }
+      
       amds.push(namespaces[ns]);
     });
 
