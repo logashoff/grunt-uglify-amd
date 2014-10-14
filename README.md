@@ -1,5 +1,7 @@
 # grunt-uglify-amd
 
+> This task is used to automate creation of source dependencies array for UglifyJS by specifying a namespace inside of module.
+
 > Use ```ns.define("my.namespace")``` and ```ns.require("my.namespace")``` to define and include a module. Both functions can be used inside of comment blocks. 
 
 >Optionally [ns library](https://github.com/logashoff/ns) can be used to assign and retrieve an object to and from a namespace using ```ns.define("foo.bar.FooBar", FooBar)``` where ```FooBar``` is a JavaScript object, then to include ```FooBar``` in a different module, do ```var FooBar = ns.require("foo.bar.FooBar")```
