@@ -52,7 +52,7 @@ ns.define("foo.bar.FooBar", FooBar);
 // Require module
 // In some other module
 /** ns.require("foo.bar.FooBar"); */ 
-Using ns library - assigns "foo.bar.FooBar" namespace to object
+// Using ns library - assigns "foo.bar.FooBar" namespace to object
 var FooBar = ns.require("foo.bar.FooBar");
 ```
 
