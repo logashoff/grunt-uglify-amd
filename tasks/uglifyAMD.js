@@ -15,7 +15,18 @@ module.exports = function(grunt) {
 
 var nsDefineRegExp = /[^.]\s*ns.define\s*\(\s*["']([^'"\s]+)["']\s*(\s*,\s*\S+)?\)/g;
 var nsRequireRegExp = /[^.]\s*ns.require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
+
+/**
+ * @example {"namespace":"path/js/file"}
+ * @type {Object}
+ */
 var nsTable = {};
+
+/**
+ * @example {"path/js/file":["namespace"]}
+ * @type {Object}
+ */
+var pathTable = {};
 
 // Please see the Grunt documentation for more information regarding task
 // creation: http://gruntjs.com/creating-tasks
@@ -28,33 +39,19 @@ function buildPaths(file, arr) {
 
   arr.unshift(file);
 
-  var body = grunt.file.read(file);
-
-  var amds = [];
-  body.replace(nsRequireRegExp, function(match, ns) {
-    if(!nsTable[ns]) {
-      throw new Error('Required namespace "' + ns + '" not found.');
-    }
-
-    amds.push(nsTable[ns]);
-  });
-
+  var amds = pathTable[file];
   if (amds && amds.length) {
-    for (var i = amds.length; i-- > 0;) {
-      buildPaths(amds[i], arr);
+    for (var i = amds.length, ns; i-- > 0;) {
+      ns = amds[i];
+      if(!nsTable[ns]) {
+        throw new Error('Required namespace "' + ns + '" not found.');
+      }
+
+      buildPaths(nsTable[ns], arr);
     }
   }
 
   return arr;
-}
-
-function getNamespace(content) {
-  var namespace;
-  content.replace(nsDefineRegExp, function(match, ns) {
-    namespace = ns;
-  });
-
-  return namespace;
 }
 
 grunt.registerMultiTask('uglifyAMD', 'UglifyJS AMD', function() {
@@ -64,15 +61,25 @@ grunt.registerMultiTask('uglifyAMD', 'UglifyJS AMD', function() {
   }
 
   var deps = this.files;
-  var options = this.options;
+  var options = this.options();
 
-  // TODO: Need a way to define file paths
-  glob('**/scripts/**/*.js', {sync:true}, function(error, files) {
-    for (var i = 0, f; f = files[i]; i++) {
-      var namespace = getNamespace(grunt.file.read(f));
-      if (namespace) {
-        nsTable[namespace] = f;
-      }
+  glob(options.pattern, {sync:true}, function(error, files) {
+    var i = 0,
+        amds,
+        content,
+        file;
+    for (; file = files[i]; i++) {
+      content = grunt.file.read(file);
+      content.replace(nsDefineRegExp, function(match, ns) {
+        nsTable[ns] = file;
+      });
+
+      amds = [];
+      content.replace(nsRequireRegExp, function(match, ns) {
+        amds.push(ns);
+      });
+
+      pathTable[file] = amds;
     }
   });
 
@@ -92,11 +99,11 @@ grunt.registerMultiTask('uglifyAMD', 'UglifyJS AMD', function() {
   paths = _.flatten(paths);
   paths = _.uniq(paths, false);
 
-  var out = {};
-  out[dest] = paths;
+  var files = {};
+  files[dest] = paths;
 
-  grunt.config.set('uglify.js.options', options());
-  grunt.config.set('uglify.js.files', out);
+  grunt.config.set('uglify.js.options', options);
+  grunt.config.set('uglify.js.files', files);
 
   grunt.task.run('uglify');
 });
