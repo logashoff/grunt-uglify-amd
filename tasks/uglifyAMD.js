@@ -54,7 +54,7 @@ function buildPaths(file, arr) {
   return arr;
 }
 
-grunt.registerMultiTask('uglifyAMD', 'UglifyJS AMD', function() {
+grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
   if (!this.files || !this.files.length) {
     grunt.log.error('File target not specified')
     return;
