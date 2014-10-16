@@ -43,8 +43,8 @@ grunt.initConfig({
 
 ### Specify Dependencies
 
+###foo.js###
 ```js
-// /foo.js
 
 /**
  * ns.define('foo')
@@ -52,9 +52,8 @@ grunt.initConfig({
 
 // code...
 ```
-
+###bar.js###
 ```js
-// /bar.js
 
 /**
  * ns.define('bar')
