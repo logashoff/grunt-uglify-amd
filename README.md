@@ -2,9 +2,9 @@
 
 > This task is used to automate creation of source dependencies array for UglifyJS by specifying a namespace inside of module.
 
-> Use ```ns.define("my.namespace")``` and ```ns.require("my.namespace")``` to define and include a module. Both functions can be used inside of comment blocks. 
+> Use ```ns.define("my.namespace")``` and ```ns.require("my.namespace")``` to define and include a module. Both functions can be used inside of comment blocks.
 
->Optionally [ns library](https://github.com/logashoff/ns) can be used to assign and retrieve an object to and from a namespace using ```ns.define("foo.bar.FooBar", FooBar)``` where ```FooBar``` is a JavaScript object, then to include ```FooBar``` in a different module, do ```var FooBar = ns.require("foo.bar.FooBar")```
+> Optionally [ns library](https://github.com/logashoff/ns) can be used to assign and retrieve an object to and from a namespace using ```ns.define("foo.bar.FooBar", FooBar)``` where ```FooBar``` is a JavaScript object, then to include ```FooBar``` in a different module, do ```var FooBar = ns.require("foo.bar.FooBar")```
 
 >**Note:** As of version 0.3.0 using ```@include path/to/my.js``` is no longer supported. Paths are identified by using namespace defined inside a file. Dependency tree is build by looking up ``ns.require`` string
 
@@ -44,18 +44,24 @@ grunt.initConfig({
 ### Specify Dependencies
 
 ```js
-// Define module
-// Using comments
-/** ns.define("foo.bar.FooBar"); */
-// Using ns library - assigns FooBar object to "foo.bar.FooBar" namespace
-ns.define("foo.bar.FooBar", FooBar);
+// /foo.js
+
+/**
+ * ns.define('foo')
+ */
+
+// code...
 ```
+
 ```js
-// Require module
-// In some other module
-/** ns.require("foo.bar.FooBar"); */ 
-// Using ns library - assigns "foo.bar.FooBar" namespace to object
-var FooBar = ns.require("foo.bar.FooBar");
+// /bar.js
+
+/**
+ * ns.define('bar')
+ * ns.require('foo')
+ */
+
+// code...
 ```
 
 ## Contributing
