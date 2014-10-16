@@ -13,7 +13,7 @@ var glob = require('glob');
 
 module.exports = function(grunt) {
 
-var nsDefineRegExp = /[^.]\s*ns.define\s*\(\s*["']([^'"\s]+)["']\s*(\s*,\s*\S+)?\)/g;
+var nsDefineRegExp = /ns.define\s*\(\s*["']([^'"\s]+)["']/g;
 var nsRequireRegExp = /[^.]\s*ns.require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
 
 /**
