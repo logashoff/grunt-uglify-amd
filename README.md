@@ -43,7 +43,7 @@ grunt.initConfig({
 
 ### Specify Dependencies
 
-###foo.js###
+####foo.js####
 ```js
 
 /**
@@ -52,7 +52,7 @@ grunt.initConfig({
 
 // code...
 ```
-###bar.js###
+####bar.js####
 ```js
 
 /**
