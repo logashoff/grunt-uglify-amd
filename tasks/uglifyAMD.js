@@ -12,18 +12,25 @@ var _ = require("lodash");
 var glob = require('glob');
 
 module.exports = function(grunt) {
-
+/**
+ * Matches "ns.define" string.
+ * @const {RegExp}
+ */
 var nsDefineRegExp = /ns.define\s*\(\s*["']([^'"\s]+)["']/g;
+/**
+ * Matches "ns.require" string.
+ * @const {RegExp}
+ */
 var nsRequireRegExp = /[^.]\s*ns.require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
 
 /**
- * @example {"namespace":"path/js/file"}
+ * Hash table maps namespace to file path.
  * @type {Object}
  */
 var nsTable = {};
 
 /**
- * @example {"path/js/file":["namespace"]}
+ * Hash table maps file path to namespace.
  * @type {Object}
  */
 var pathTable = {};
@@ -31,63 +38,67 @@ var pathTable = {};
 // Please see the Grunt documentation for more information regarding task
 // creation: http://gruntjs.com/creating-tasks
 
+/**
+ * Recursively builds file paths array from specified file and assigns them to
+ * array parameter. Uses pathTable to look up namespace dependencies.
+ * @param {string} file File path.
+ * @param {Array} arr Array to store file paths.
+ * @returns {Array|null} Array of file paths.
+ */
 function buildPaths(file, arr) {
   if (!grunt.file.exists(file)) {
     grunt.log.warn('File "' + file + '" not found');
-    return;
+    return null;
   }
-
   arr.unshift(file);
-
   var amds = pathTable[file];
   if (amds && amds.length) {
     for (var i = amds.length, ns; i-- > 0;) {
       ns = amds[i];
       if(!nsTable[ns]) {
-        throw new Error('Required namespace "' + ns + '" not found.');
+        throw new Error(
+          'Required namespace "' + ns + '" not found in ' + file);
       }
-
       buildPaths(nsTable[ns], arr);
     }
   }
-
   return arr;
+}
+
+/**
+ * Glob handler.
+ * @param {string} error Glob error.
+ * @param {Array<string>} files Array of file paths.
+ */
+function globHandler(error, files) {
+  if (error) {
+    throw new Error(error);
+  }
+  var file;
+  for (var i = 0; file = files[i]; i++) {
+    var content = grunt.file.read(file);
+    content.replace(nsDefineRegExp, function(match, ns) {
+      nsTable[ns] = file;
+    });
+    var amds = [];
+    content.replace(nsRequireRegExp, function(match, ns) {
+      amds.push(ns);
+    });
+    pathTable[file] = amds;
+  }
 }
 
 grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
   if (!this.files || !this.files.length) {
-    grunt.log.error('File target not specified')
+    grunt.log.error('File target not specified');
     return;
   }
-
   var deps = this.files;
   var options = this.options();
-
-  glob(options.pattern, {sync:true}, function(error, files) {
-    var i = 0,
-        amds,
-        content,
-        file;
-    for (; file = files[i]; i++) {
-      content = grunt.file.read(file);
-      content.replace(nsDefineRegExp, function(match, ns) {
-        nsTable[ns] = file;
-      });
-
-      amds = [];
-      content.replace(nsRequireRegExp, function(match, ns) {
-        amds.push(ns);
-      });
-
-      pathTable[file] = amds;
-    }
-  });
-
+  glob(options.pattern, {sync: true}, globHandler);
   grunt.loadNpmTasks('grunt-contrib-uglify');
-
-  var dest = deps[0].dest,
-      paths = [];
-
+  var dest = deps[0].dest;
+  var paths = [];
   _.each(deps, function(file) {
     _.each(file.src, function(filepath) {
       var src = [];
@@ -95,16 +106,12 @@ grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
       paths.push(src);
     });
   });
-
   paths = _.flatten(paths);
   paths = _.uniq(paths, false);
-
   var files = {};
   files[dest] = paths;
-
   grunt.config.set('uglify.js.options', options);
   grunt.config.set('uglify.js.files', files);
-
   grunt.task.run('uglify');
 });
 };

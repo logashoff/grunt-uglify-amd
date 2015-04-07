@@ -8,6 +8,8 @@
 
 >**Note:** As of version 0.3.0 using ```@include path/to/my.js``` is no longer supported. Paths are identified by using namespace defined inside a file. Dependency tree is build by looking up ``ns.require`` string
 
+>**Warning:** This task does not resolve circular dependencies. Cases where ```A->B->A``` will result in stack overflow error. 
+
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
 
