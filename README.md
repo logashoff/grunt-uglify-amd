@@ -51,16 +51,16 @@ grunt.initConfig({
 });
 ```
 
-### Specify Dependencies
+##### Specify Dependencies
 
-#####foo.js
+foo.js
 ```js
 /**
  * ns.define('foo')
  */
 // code...
 ```
-#####bar.js
+bar.js
 ```js
 /**
  * ns.define('bar')
