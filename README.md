@@ -33,35 +33,39 @@ In your project's Gruntfile, add a section named `uglifyAMD` to the data object 
 ```js
 grunt.initConfig({
   uglifyAMD: {
+   // Task-specific options go here.
     options: {
-      // Task-specific options go here.
+      sourceMap: true,
+      sourceMapIncludeSources: true,
+      compress: true,
+      beautify: false,
+      pattern: 'js/*.js'
     },
+    // Target-specific file lists and/or options go here.
     files: {
-      // Target-specific file lists and/or options go here.
-    },
+       // foo.js will be added to the array of sources by the task since it contains ns.define 
+       // bar.js requires it as dependency using ns.require('foo') 
+      'js/compiled.js': ['js/bar.js] 
+    }
   },
 });
 ```
 
 ### Specify Dependencies
 
-####foo.js####
+#####foo.js
 ```js
-
 /**
  * ns.define('foo')
  */
-
 // code...
 ```
-####bar.js####
+#####bar.js
 ```js
-
 /**
  * ns.define('bar')
  * ns.require('foo')
  */
-
 // code...
 ```
 
