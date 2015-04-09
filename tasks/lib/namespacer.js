@@ -9,7 +9,7 @@ var nsCache = {};
  * Parses exports object.
  * @param {Array} [dependencies] Dependencies array.
  * @param {Object} [exports] Module definition.
- * @return {!Object} Parsed exports object.
+ * @return {Object} Parsed exports object.
  * @private
  */
 function parse(dependencies, exports) {
