@@ -109,7 +109,7 @@ grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
   });
   paths = _.flatten(paths);
   paths = _.uniq(paths, false);
-  var libPath = path.resolve(__dirname, '../lib/namespacer.js');
+  var libPath = path.resolve(__dirname, 'lib/namespacer.js');
   libPath = path.normalize(libPath);
   paths.unshift(libPath);
   var files = {};
