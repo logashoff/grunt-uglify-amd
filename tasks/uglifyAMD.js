@@ -79,10 +79,12 @@ function globHandler(error, files) {
   for (var i = 0; file = files[i]; i++) {
     var content = grunt.file.read(file);
     content.replace(nsDefineRegExp, function(match, ns) {
+      //noinspection JSReferencingMutableVariableFromClosure
       nsTable[ns] = file;
     });
     var amds = [];
     content.replace(nsRequireRegExp, function(match, ns) {
+      //noinspection JSReferencingMutableVariableFromClosure
       amds.push(ns);
     });
     pathTable[file] = amds;
