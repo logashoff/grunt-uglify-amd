@@ -10,18 +10,19 @@
 
 var _ = require("lodash");
 var glob = require('glob');
+var path = require('path');
 
 module.exports = function(grunt) {
 /**
- * Matches "ns.define" string.
+ * Matches "provide" string.
  * @const {RegExp}
  */
-var nsDefineRegExp = /ns.define\s*\(\s*["']([^'"\s]+)["']/g;
+var nsDefineRegExp = /provide\s*\(\s*["']([^'"\s]+)["']/g;
 /**
- * Matches "ns.require" string.
+ * Matches "using" string.
  * @const {RegExp}
  */
-var nsRequireRegExp = /[^.]\s*ns.require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
+var nsRequireRegExp = /[^.]\s*using\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
 
 /**
  * Hash table maps namespace to file path.
@@ -78,10 +79,12 @@ function globHandler(error, files) {
   for (var i = 0; file = files[i]; i++) {
     var content = grunt.file.read(file);
     content.replace(nsDefineRegExp, function(match, ns) {
+      //noinspection JSReferencingMutableVariableFromClosure
       nsTable[ns] = file;
     });
     var amds = [];
     content.replace(nsRequireRegExp, function(match, ns) {
+      //noinspection JSReferencingMutableVariableFromClosure
       amds.push(ns);
     });
     pathTable[file] = amds;
@@ -108,6 +111,9 @@ grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
   });
   paths = _.flatten(paths);
   paths = _.uniq(paths, false);
+  var libPath = path.resolve(__dirname, 'lib/namespacer.js');
+  libPath = path.normalize(libPath);
+  paths.unshift(libPath);
   var files = {};
   files[dest] = paths;
   grunt.config.set('uglify.js.options', options);

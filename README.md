@@ -1,12 +1,9 @@
 # grunt-uglify-amd
+> This task is used to automate creation of source dependencies array for UglifyJS by specifying a namespace inside of module itself.
 
-> This task is used to automate creation of source dependencies array for UglifyJS by specifying a namespace inside of module.
+> Use ```provide('mynamespace', [dependency1], function(dep1))``` or ```provide('mynamespace', null, {foo:bar})``` to define a namespace.
 
-> Use ```ns.define("my.namespace")``` and ```ns.require("my.namespace")``` to define and include a module. Both functions can be used inside of comment blocks.
-
-> Optionally [ns library](https://github.com/logashoff/ns) can be used to assign and retrieve an object to and from a namespace using ```ns.define("foo.bar.FooBar", FooBar)``` where ```FooBar``` is a JavaScript object, then to include ```FooBar``` in a different module, do ```var FooBar = ns.require("foo.bar.FooBar")```
-
->**Note:** As of version 0.3.0 using ```@include path/to/my.js``` is no longer supported. Paths are identified by using namespace defined inside a file. Dependency tree is build by looking up ``ns.require`` string
+> Use ```var myObj = using("mynamespace")``` to import an object associated with namespace. 
 
 >**Warning:** This task does not resolve circular dependencies. Cases where ```A->B->A``` will result in stack overflow error. 
 
@@ -37,35 +34,32 @@ grunt.initConfig({
     options: {
       sourceMap: true,
       sourceMapIncludeSources: true,
-      compress: true,
+      compress: {},
       beautify: false,
       pattern: 'js/*.js'
     },
     // Target-specific file lists and/or options go here.
     files: {
-       // foo.js will be added to the array of sources by the task since it contains ns.define 
-       // bar.js requires it as dependency using ns.require('foo') 
+       // foo.js will be added to the array of sources by the task since
+       // bar.js requires it as dependency
       'js/compiled.js': ['js/bar.js] 
     }
   },
 });
 ```
 
-##### Specify Dependencies
+### Specify Dependencies
 
-foo.js
+> foo.js
 ```js
-/**
- * ns.define('foo')
- */
-// code...
+provide('foo', [window, document, whatever...], function(win, doc, whatever...) {
+  // code...
+  return whatever...;
+})
 ```
-bar.js
+> bar.js
 ```js
-/**
- * ns.define('bar')
- * ns.require('foo')
- */
+var myFoo = using('foo');
 // code...
 ```
 
