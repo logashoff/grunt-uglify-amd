@@ -8,21 +8,6 @@
 var nsCache = {};
 
 /**
- * Parses exports object.
- * @param {Array} [dependencies] Dependencies array.
- * @param {Object} [exports] Module definition.
- * @return {Object|null} Parsed exports object.
- * @private
- */
-function parse(dependencies, exports) {
-  if (typeof exports === 'function') {
-    return exports.apply(win, dependencies);
-  }
-  return exports || null;
-}
-
-
-/**
  * Returns object associated with specified namespace.
  * Namespace must be defined using <code>provide</code>.
  * @param  {string} namespace Provided namespace.
@@ -39,12 +24,15 @@ win.using = function(namespace) {
 /**
  * Stores exports object using namespace key.
  * @param {string} namespace Namespace string.
- * @param {Array} [dependencies] Optional dependencies array.
- * @param {Object} [exports] Object to assign to namespace.
+ * @param {Object|Function} [exports] Object to assign to namespace.
  * @return {Object} Object associated with provided namespace.
  */
-win.provide = function(namespace, dependencies, exports) {
-    nsCache[namespace] = parse(dependencies, exports);
-    return nsCache[namespace];
+win.provide = function(namespace, exports) {
+  if (typeof exports === 'function') {
+    nsCache[namespace] = exports.call(win);
+  } else {
+    nsCache[namespace] = exports;
+  }
+  return nsCache[namespace];
 };
 })(window);

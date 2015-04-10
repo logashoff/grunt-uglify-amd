@@ -1,1 +1,1 @@
-provide('moduleE', [], {});
+provide('moduleE', {});

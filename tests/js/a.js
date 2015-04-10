@@ -1,4 +1,4 @@
-provide('moduleA', ['foo', 'Bar'], function(one, two) {
+provide('moduleA', function() {
 using('moduleC');
-return one + two;
+return 1 + 2;
 });

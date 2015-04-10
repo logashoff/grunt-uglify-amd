@@ -1,7 +1,7 @@
 # grunt-uglify-amd
 > This task is used to automate creation of source dependencies array for UglifyJS by specifying a namespace inside of module itself.
 
-> Use ```provide('mynamespace', [dependency1], function(dep1))``` or ```provide('mynamespace', null, {foo:bar})``` to define a namespace.
+> Use ```provide('mynamespace', function())``` or ```provide('mynamespace', {foo:'bar'})``` to define a namespace.
 
 > Use ```var myObj = using("mynamespace")``` to import an object associated with namespace. 
 

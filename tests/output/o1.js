@@ -1,41 +1,43 @@
 (function(win) {
     "use strict";
     var nsCache = {};
-    function parse(dependencies, exports) {
-        if (typeof exports === "function") {
-            return exports.apply(win, dependencies);
-        }
-        return exports || null;
-    }
     win.using = function(namespace) {
         if (!(namespace in nsCache)) {
             throw new Error('Namespace "' + namespace + '" is not defined');
         }
         return nsCache[namespace];
     };
-    win.provide = function(namespace, dependencies, exports) {
-        nsCache[namespace] = parse(dependencies, exports);
+    win.provide = function(namespace, exports) {
+        if (typeof exports === "function") {
+            nsCache[namespace] = exports.call(win);
+        } else {
+            nsCache[namespace] = exports;
+        }
         return nsCache[namespace];
     };
 })(window);
 
-provide("moduleE", [], {});
+provide("moduleE", {});
 
-provide("moduleF", [ 1, 2, 3, 4 ], function(one, two, three, four) {
-    return one + two + three + four;
+provide("moduleF", function() {
+    return 1 + 2 + 3 + 4;
 });
 
-provide("moduleD");
-
-using("moduleE");
-
-using("moduleF");
+provide("moduleD", function() {
+    using("moduleE");
+    using("moduleF");
+    var D = function() {
+        this.d();
+    };
+    D.prototype.d = function() {};
+    return D;
+});
 
 provide("moduleC");
 
 using("moduleD");
 
-provide("moduleA", [ "foo", "Bar" ], function(one, two) {
+provide("moduleA", function() {
     using("moduleC");
-    return one + two;
+    return 1 + 2;
 });
