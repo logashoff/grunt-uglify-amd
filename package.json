@@ -1,7 +1,7 @@
 {
   "name": "grunt-uglify-amd",
   "description": "AMD support for UglifyJS",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "homepage": "https://github.com/logashoff/grunt-uglify-amd",
   "author": {
     "name": "Alex Logashov",
