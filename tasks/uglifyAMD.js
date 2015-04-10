@@ -5,10 +5,9 @@
  * Copyright (c) 2014 Alex Logashov
  * Licensed under the MIT license.
  */
-
 'use strict';
 
-var _ = require("lodash");
+var _ = require('lodash');
 var glob = require('glob');
 var path = require('path');
 
@@ -22,7 +21,7 @@ var nsDefineRegExp = /provide\s*\(\s*["']([^'"\s]+)["']/g;
  * Matches "using" string.
  * @const {RegExp}
  */
-var nsRequireRegExp = /[^.]\s*using\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
+var nsRequireRegExp = /using\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
 
 /**
  * Hash table maps namespace to file path.
@@ -52,10 +51,10 @@ function buildPaths(file, arr) {
     return null;
   }
   arr.unshift(file);
-  var amds = pathTable[file];
-  if (amds && amds.length) {
-    for (var i = amds.length, ns; i-- > 0;) {
-      ns = amds[i];
+  var namespaces = pathTable[file];
+  if (namespaces && namespaces.length) {
+    for (var i = namespaces.length, ns; i-- > 0;) {
+      ns = namespaces[i];
       if(!nsTable[ns]) {
         throw new Error(
           'Required namespace "' + ns + '" not found in ' + file);
@@ -66,56 +65,44 @@ function buildPaths(file, arr) {
   return arr;
 }
 
-/**
- * Glob handler.
- * @param {string} error Glob error.
- * @param {Array<string>} files Array of file paths.
- */
-function globHandler(error, files) {
-  if (error) {
-    throw new Error(error);
-  }
-  var file;
-  for (var i = 0; file = files[i]; i++) {
-    var content = grunt.file.read(file);
-    content.replace(nsDefineRegExp, function(match, ns) {
-      //noinspection JSReferencingMutableVariableFromClosure
-      nsTable[ns] = file;
-    });
-    var amds = [];
-    content.replace(nsRequireRegExp, function(match, ns) {
-      //noinspection JSReferencingMutableVariableFromClosure
-      amds.push(ns);
-    });
-    pathTable[file] = amds;
-  }
-}
-
 grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
   if (!this.files || !this.files.length) {
     grunt.log.error('File target not specified');
     return;
   }
-  var deps = this.files;
+  var targets = this.files;
   var options = this.options();
-  glob(options.pattern, {sync: true}, globHandler);
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  var dest = deps[0].dest;
-  var paths = [];
-  _.each(deps, function(file) {
-    _.each(file.src, function(filepath) {
-      var src = [];
-      buildPaths(filepath, src);
-      paths.push(src);
+  var matchedFiles = glob.sync(options.pattern);
+  var file;
+  for (var i = 0; file = matchedFiles[i]; i++) {
+    var content = grunt.file.read(file);
+    content.replace(nsDefineRegExp, function(match, ns) {
+      //noinspection JSReferencingMutableVariableFromClosure
+      nsTable[ns] = file;
     });
-  });
-  paths = _.flatten(paths);
-  paths = _.uniq(paths, false);
+    var namespaces = [];
+    content.replace(nsRequireRegExp, function(match, ns) {
+      //noinspection JSReferencingMutableVariableFromClosure
+      namespaces.push(ns);
+    });
+    pathTable[file] = namespaces;
+  }
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   var libPath = path.resolve(__dirname, 'lib/namespacer.js');
-  libPath = path.normalize(libPath);
-  paths.unshift(libPath);
   var files = {};
-  files[dest] = paths;
+  libPath = path.normalize(libPath);
+  _.each(targets, function(target, i) {
+    var path = [];
+    _.each(target.src, function(source, i) {
+      var src = [];
+      path.push(src);
+      buildPaths(source, src);
+    });
+    path = _.flatten(path);
+    path = _.uniq(path, false);
+    path.unshift(libPath);
+    files[target.dest] = path;
+  });
   grunt.config.set('uglify.js.options', options);
   grunt.config.set('uglify.js.files', files);
   grunt.task.run('uglify');

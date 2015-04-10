@@ -42,7 +42,7 @@ grunt.initConfig({
     files: {
        // foo.js will be added to the array of sources by the task since
        // bar.js requires it as dependency
-      'js/compiled.js': ['js/bar.js] 
+      'js/compiled.js': ['js/bar.js'] 
     }
   },
 });
@@ -54,7 +54,7 @@ grunt.initConfig({
 ```js
 provide('foo', [window, document, whatever...], function(win, doc, whatever...) {
   // code...
-  return whatever...;
+  return something...;
 })
 ```
 > bar.js

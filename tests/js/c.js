@@ -1,0 +1,2 @@
+provide('moduleC');
+using('moduleD');
