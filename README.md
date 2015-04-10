@@ -52,7 +52,7 @@ grunt.initConfig({
 
 > foo.js
 ```js
-provide('foo', [window, document, whatever...], function(win, doc, whatever...) {
+provide('foo', function() {
   // code...
   return something...;
 })
