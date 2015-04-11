@@ -16,7 +16,8 @@ grunt.initConfig({
       },
       files: {
         'tests/output/o1.js': ['tests/js/a.js'],
-        'tests/output/o2.js': ['tests/js/b.js']
+        'tests/output/o2.js': ['tests/js/b.js'],
+        'tests/output/o3.js': ['tests/js/c.js']
       }
     }
   },

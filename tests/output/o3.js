@@ -36,12 +36,3 @@ provide("moduleD", function() {
 provide("moduleC", function() {
     using("moduleD");
 });
-
-provide("moduleA", function() {
-    using("moduleC");
-    return 1 + 2;
-});
-
-using("moduleA");
-
-var b = "b is using moduleA.";

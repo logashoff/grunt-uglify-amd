@@ -28,6 +28,10 @@ win.using = function(namespace) {
  * @return {Object} Object associated with provided namespace.
  */
 win.provide = function(namespace, exports) {
+  if (namespace in nsCache) {
+    console.warn('"' + namespace + '" has already been provided. ' +
+        'Existing exports object will be overwritten.');
+  }
   if (typeof exports === 'function') {
     nsCache[namespace] = exports.call(win);
   } else {

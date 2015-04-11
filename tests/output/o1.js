@@ -33,9 +33,9 @@ provide("moduleD", function() {
     return D;
 });
 
-provide("moduleC");
-
-using("moduleD");
+provide("moduleC", function() {
+    using("moduleD");
+});
 
 provide("moduleA", function() {
     using("moduleC");

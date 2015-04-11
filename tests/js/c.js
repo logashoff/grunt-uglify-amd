@@ -1,2 +1,3 @@
-provide('moduleC');
+provide('moduleC', function() {
 using('moduleD');
+});

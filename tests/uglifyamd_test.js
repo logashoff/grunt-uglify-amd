@@ -27,21 +27,30 @@ function contains(str, value) {
 
 module.exports = {
   testOutput1: function(test) {
-    var output1 = grunt.file.read('tests/output/o1.js');
-    test.ok(contains(output1, 'win.using') &&
-      contains(output1, 'win.provide'), 'Contains library');
-    test.ok(contains(output1, 'moduleA'), 'Contains "moduleA"');
-    test.ok(contains(output1, 'moduleE'), 'Contains "moduleE"');
-    test.ok(contains(output1, 'moduleF'), 'Contains "moduleF"');
+    var out = grunt.file.read('tests/output/o1.js');
+    test.ok(contains(out, 'win.using') &&
+      contains(out, 'win.provide'), 'Contains library');
+    test.ok(contains(out, 'moduleA'), 'Contains "moduleA"');
+    test.ok(contains(out, 'moduleE'), 'Contains "moduleE"');
+    test.ok(contains(out, 'moduleF'), 'Contains "moduleF"');
     test.done();
   },
   testOutput2: function(test) {
-    var output2 = grunt.file.read('tests/output/o2.js');
-    test.ok(contains(output2, 'win.using') &&
-      contains(output2, 'win.provide'), 'Contains library');
-    test.ok(contains(output2, 'moduleA'), 'Contains "moduleA"');
-    test.ok(contains(output2, 'moduleE'), 'Contains "moduleE"');
-    test.ok(contains(output2, 'moduleC'), 'Contains "moduleC"');
+    var out = grunt.file.read('tests/output/o2.js');
+    test.ok(contains(out, 'win.using') &&
+      contains(out, 'win.provide'), 'Contains library');
+    test.ok(contains(out, 'moduleA'), 'Contains "moduleA"');
+    test.ok(contains(out, 'moduleE'), 'Contains "moduleE"');
+    test.ok(contains(out, 'moduleC'), 'Contains "moduleC"');
+    test.done();
+  },
+  testOutput3: function(test) {
+    var out = grunt.file.read('tests/output/o3.js');
+    test.ok(contains(out, 'win.using') &&
+    contains(out, 'win.provide'), 'Contains library');
+    test.ok(contains(out, 'provide("moduleD"'), 'Contains "moduleD"');
+    test.ok(contains(out, 'provide("moduleE"'), 'Contains "moduleE"');
+    test.ok(contains(out, 'provide("moduleF"'), 'Contains "moduleF"');
     test.done();
   }
 };

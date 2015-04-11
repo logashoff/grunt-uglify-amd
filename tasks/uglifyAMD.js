@@ -17,6 +17,7 @@ module.exports = function(grunt) {
  * @const {RegExp}
  */
 var nsDefineRegExp = /provide\s*\(\s*["']([^'"\s]+)["']/g;
+
 /**
  * Matches "using" string.
  * @const {RegExp}
@@ -34,9 +35,6 @@ var nsTable = {};
  * @type {Object}
  */
 var pathTable = {};
-
-// Please see the Grunt documentation for more information regarding task
-// creation: http://gruntjs.com/creating-tasks
 
 /**
  * Recursively builds file paths array from specified file and assigns them to
@@ -65,7 +63,7 @@ function buildPaths(file, arr) {
   return arr;
 }
 
-grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
+grunt.registerMultiTask('uglifyAMD', function() {
   if (!this.files || !this.files.length) {
     grunt.log.error('File target not specified');
     return;
@@ -87,13 +85,12 @@ grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
     });
     pathTable[file] = namespaces;
   }
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   var libPath = path.resolve(__dirname, 'lib/namespacer.js');
   var files = {};
   libPath = path.normalize(libPath);
-  _.each(targets, function(target, i) {
+  _.each(targets, function(target) {
     var path = [];
-    _.each(target.src, function(source, i) {
+    _.each(target.src, function(source) {
       var src = [];
       path.push(src);
       buildPaths(source, src);
@@ -103,6 +100,7 @@ grunt.registerMultiTask('uglifyAMD', 'AMD support for UglifyJS', function() {
     path.unshift(libPath);
     files[target.dest] = path;
   });
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.config.set('uglify.js.options', options);
   grunt.config.set('uglify.js.files', files);
   grunt.task.run('uglify');

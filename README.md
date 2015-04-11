@@ -1,10 +1,7 @@
 # grunt-uglify-amd
-> This task is used to automate creation of source dependencies array for UglifyJS by specifying a namespace inside of module itself.
-
-> Use ```provide('mynamespace', function())``` or ```provide('mynamespace', {foo:'bar'})``` to define a namespace.
-
+> This task is used to automate creation of source dependencies array for grunt-contrib-uglify task.
+> Use ```provide('mynamespace', function())``` or ```provide('mynamespace', {})``` to define a module.
 > Use ```var myObj = using("mynamespace")``` to import an object associated with namespace. 
-
 >**Warning:** This task does not resolve circular dependencies. Cases where ```A->B->A``` will result in stack overflow error. 
 
 ## Getting Started
@@ -30,7 +27,7 @@ In your project's Gruntfile, add a section named `uglifyAMD` to the data object 
 ```js
 grunt.initConfig({
   uglifyAMD: {
-   // Task-specific options go here.
+   // grunt-contrib-uglify task-specific options go here.
     options: {
       sourceMap: true,
       sourceMapIncludeSources: true,
@@ -38,11 +35,11 @@ grunt.initConfig({
       beautify: false,
       pattern: 'js/*.js'
     },
-    // Target-specific file lists and/or options go here.
+    // Target-specific file lists
     files: {
        // foo.js will be added to the array of sources by the task since
        // bar.js requires it as dependency
-      'js/compiled.js': ['js/bar.js'] 
+      'js/min.js': ['js/bar.js'] 
     }
   },
 });
