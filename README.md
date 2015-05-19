@@ -1,8 +1,11 @@
 # grunt-uglify-amd
-> This task is used to automate creation of source dependencies array for grunt-contrib-uglify task.
-> Use ```provide('mynamespace', function())``` or ```provide('mynamespace', {})``` to define a module.
-> Use ```var myObj = using("mynamespace")``` to import an object associated with namespace. 
->**Warning:** This task does not resolve circular dependencies. Cases where ```A->B->A``` will result in stack overflow error. 
+> This task is used to automate creation of source dependencies array for [grunt-contrib-uglify](https://www.npmjs.com/package/grunt-contrib-uglify).
+
+Use ```provide('mynamespace', function())``` or ```provide('mynamespace', {})``` to define a module.
+
+Use ```var myObj = using("mynamespace")``` to import an object associated with namespace.
+
+**Warning:** This task does not resolve circular dependencies. Cases where ```A->B->A``` will result in stack overflow error. 
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -62,6 +65,3 @@ var myFoo = using('foo');
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-_(Nothing yet)_

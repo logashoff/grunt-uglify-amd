@@ -70,7 +70,15 @@ grunt.registerMultiTask('uglifyAMD', function() {
   }
   var targets = this.files;
   var options = this.options();
-  var matchedFiles = glob.sync(options.pattern);
+  var pattern = options.pattern;
+  var matchedFiles = [];
+  if (Array.isArray(pattern)) {
+    pattern.forEach(function(pattern) {
+      matchedFiles = matchedFiles.concat(glob.sync(pattern))
+    });
+  } else if(typeof pattern === 'string') {
+    matchedFiles = glob.sync(options.pattern);
+  }
   var file;
   for (var i = 0; file = matchedFiles[i]; i++) {
     var content = grunt.file.read(file);
