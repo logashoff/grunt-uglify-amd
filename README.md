@@ -1,4 +1,4 @@
-# grunt-uglify-amd
+# grunt-uglify-amd (DEPRECATED)
 > This task is used to automate creation of source dependencies array for [grunt-contrib-uglify](https://www.npmjs.com/package/grunt-contrib-uglify).
 
 Use ```provide('mynamespace', function())``` or ```provide('mynamespace', {})``` to define a module.
